@@ -3,10 +3,27 @@ import { Comment } from "../Comment";
 import { Avatar } from "../Avatar";
 import { format, formatDistanceToNow } from 'date-fns';
 import ptBr from 'date-fns/locale/pt-BR';
-import { useState } from "react";
+import { ChangeEvent, FormEvent, useState } from "react";
+
+interface Author {
+  name: string;
+  role: string;
+  avatarUrl: string;
+}
+
+interface Content {
+  type: string;
+  content: string;
+}
+
+interface PostProps {
+  author: Author;
+  content: Content[];
+  publishedAt: string;
+}
 
 //Arrumar post para receber propriedades
-export function Post({author, content, publishedAt}) {
+export function Post({author, content, publishedAt}: PostProps) {
   const [comments, setComments] = useState(["Que legal"]);
   const [newComment, setNewComment] = useState('');
 
@@ -21,17 +38,17 @@ export function Post({author, content, publishedAt}) {
     }
   );
 
-  const handleCreateNewComment = (e) => {
+  const handleCreateNewComment = (e: FormEvent) => {
     e.preventDefault();
-    setComments([...comments, e.target.comment.value]);
+    setComments([...comments, newComment]);
     setNewComment('');
   }
 
-  const handleNewCommentChange = () => {
-    setNewComment(event.target.value)
+  const handleNewCommentChange = (e: ChangeEvent<HTMLTextAreaElement>) => {
+    setNewComment(e.target.value)
   }
 
-  const deleteComment = (commentDelete) => {
+  const deleteComment = (commentDelete: string) => {
     const newCommentsList = comments.filter((comment) => comment != commentDelete);
     setComments(newCommentsList);
   }
